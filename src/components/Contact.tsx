@@ -2,7 +2,7 @@ import { Phone, MapPin, Clock, Instagram, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Contact() {
-  const whatsappLink = "https://wa.me/5585999991111?text=Olá! Gostaria de fazer um pedido.";
+  const whatsappLink = "https://wa.me/558581002335?text=Olá! Gostaria de fazer um pedido.";
 
   return (
     <section id="contato" className="py-16 md:py-24 bg-muted">
@@ -25,8 +25,8 @@ export function Contact() {
                 <Clock className="h-6 w-6 text-primary flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-foreground">Horário de Funcionamento</p>
-                  <p className="text-muted-foreground">Segunda a Sexta: 10h às 14h</p>
-                  <p className="text-muted-foreground">Sábado: 10h às 13h</p>
+                  <p className="text-muted-foreground">Terça a Domingo: 10h às 14h</p>
+                  <p className="text-muted-foreground">Segunda-feira: Fechado</p>
                 </div>
               </div>
 
@@ -34,7 +34,8 @@ export function Contact() {
                 <MapPin className="h-6 w-6 text-primary flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-foreground">Endereço</p>
-                  <p className="text-muted-foreground">Fortaleza, Ceará</p>
+                  <p className="text-muted-foreground">Av. Central, 333 - Quadra 33</p>
+                  <p className="text-muted-foreground">Cidade 2000, Fortaleza - CE</p>
                 </div>
               </div>
 
@@ -43,10 +44,17 @@ export function Contact() {
                 <div>
                   <p className="font-medium text-foreground">Telefone / WhatsApp</p>
                   <a 
-                    href="tel:85999991111" 
+                    href="tel:8581002335" 
                     className="text-primary hover:underline"
                   >
-                    (85) 99999-1111
+                    (85) 8100-2335 (WhatsApp)
+                  </a>
+                  <br />
+                  <a 
+                    href="tel:8532490764" 
+                    className="text-primary hover:underline"
+                  >
+                    (85) 3249-0764 (Ligações)
                   </a>
                 </div>
               </div>
