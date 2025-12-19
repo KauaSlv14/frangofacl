@@ -1,4 +1,4 @@
-import { Flame, Heart, Truck } from 'lucide-react';
+import { Flame, Heart, Bike } from 'lucide-react';
 import churrasqueira from '@/assets/churrasqueira.jpg';
 
 export function About() {
@@ -11,13 +11,10 @@ export function About() {
               Nossa História
             </h2>
             <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-              O Frango Fácil nasceu da paixão pela verdadeira comida caseira nordestina. 
-              Há anos, servimos os melhores frangos assados na brasa, com aquele sabor 
-              inconfundível que só a churrasqueira tradicional pode oferecer.
+              O Frango Fácil é uma galeteria/marmitaria com forte presença local na Cidade 2000, Fortaleza. Nossa especialidade é frango assado e pratos executivos para o almoço, preparados diariamente com temperos caseiros e porções generosas. Há anos, servimos os melhores frangos assados na brasa, com aquele sabor inconfundível que só a churrasqueira tradicional pode oferecer.
             </p>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              Nossa missão é levar até você refeições saborosas, nutritivas e preparadas 
-              com carinho, mantendo a tradição e qualidade que nossa família sempre cultivou.
+              A unidade fica na Av. Central, 333 (Quadra 33) e funciona de terça a domingo no horário de almoço. Oferecemos retirada no local e entrega rápida para sua comodidade.
             </p>
 
             <div className="grid grid-cols-3 gap-4">
@@ -30,7 +27,7 @@ export function About() {
                 <p className="text-sm font-medium">Com Amor</p>
               </div>
               <div className="text-center p-4 bg-card rounded-lg shadow-sm">
-                <Truck className="h-8 w-8 text-primary mx-auto mb-2" />
+                <Bike className="h-8 w-8 text-primary mx-auto mb-2" />
                 <p className="text-sm font-medium">Entrega Rápida</p>
               </div>
             </div>
@@ -44,7 +41,7 @@ export function About() {
                 className="rounded-2xl shadow-2xl w-full h-[300px] md:h-[400px] object-cover"
               />
               <div className="absolute -bottom-4 -left-4 bg-primary text-primary-foreground p-4 rounded-xl shadow-lg">
-                <p className="font-bold text-2xl">+5 anos</p>
+                <p className="font-bold text-2xl">+10 anos</p>
                 <p className="text-sm">de tradição</p>
               </div>
             </div>
