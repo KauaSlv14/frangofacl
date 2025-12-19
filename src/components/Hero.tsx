@@ -58,11 +58,11 @@ export function Hero() {
             <span>Fortaleza, CE</span>
           </div>
           <a 
-            href="tel:85999991111"
+            href="tel:8598100235"
             className="flex items-center gap-2 hover:text-secondary transition-colors"
           >
             <Phone className="h-5 w-5 text-secondary" />
-            <span>(85) 99999-1111</span>
+            <span>(85) 98100-2335</span>
           </a>
         </div>
       </div>

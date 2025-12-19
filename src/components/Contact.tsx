@@ -2,7 +2,7 @@ import { Phone, MapPin, Clock, Instagram, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Contact() {
-  const whatsappLink = "https://wa.me/558581002335?text=Olá! Gostaria de fazer um pedido.";
+  const whatsappLink = "https://wa.me/5585981002335?text=Olá! Gostaria de fazer um pedido.";
 
   return (
     <section id="contato" className="py-16 md:py-24 bg-muted">
@@ -44,10 +44,10 @@ export function Contact() {
                 <div>
                   <p className="font-medium text-foreground">Telefone / WhatsApp</p>
                   <a 
-                    href="tel:8581002335" 
+                    href="tel:8598100235" 
                     className="text-primary hover:underline"
                   >
-                    (85) 8100-2335 (WhatsApp)
+                    (85) 98100-2335 (WhatsApp)
                   </a>
                   <br />
                   <a 
