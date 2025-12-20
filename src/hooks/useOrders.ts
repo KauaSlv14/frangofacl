@@ -67,9 +67,13 @@ export function useCreateOrder() {
 
   return useMutation({
     mutationFn: async (params: CreateOrderParams) => {
-      const { data: order, error: orderError } = await supabase
+      // Geramos o ID no cliente para não precisar de RETURNING/SELECT (que é bloqueado por RLS para usuários públicos)
+      const orderId = crypto.randomUUID();
+
+      const { error: orderError } = await supabase
         .from('orders')
         .insert({
+          id: orderId,
           customer_name: params.customerName,
           customer_phone: params.customerPhone,
           customer_address: params.customerAddress || null,
@@ -80,14 +84,12 @@ export function useCreateOrder() {
           delivery_fee: params.deliveryFee,
           total: params.total,
           status: 'novo'
-        })
-        .select()
-        .single();
+        });
 
       if (orderError) throw orderError;
 
       const orderItems = params.items.map(item => ({
-        order_id: order.id,
+        order_id: orderId,
         product_id: item.product.id,
         product_name: item.product.name,
         quantity: item.quantity,
@@ -102,7 +104,7 @@ export function useCreateOrder() {
 
       if (itemsError) throw itemsError;
 
-      return order as Order;
+      return { id: orderId } as unknown as Order;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });

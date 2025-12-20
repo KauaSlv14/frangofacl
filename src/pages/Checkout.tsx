@@ -80,7 +80,6 @@ export function CheckoutPage() {
         total
       });
 
-      clearCart();
       toast.success('Pedido realizado com sucesso!');
       
       const whatsappMessage = encodeURIComponent(
@@ -95,6 +94,7 @@ export function CheckoutPage() {
       if (paymentMethod === 'pix') {
         setShowPixModal(true);
       } else {
+        clearCart();
         window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
         navigate('/');
       }
@@ -358,6 +358,7 @@ export function CheckoutPage() {
                   `Pagamento: Pix\n\n` +
                   `Total: ${formatPrice(total)}`
                 );
+                clearCart();
                 window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
                 setShowPixModal(false);
                 navigate('/');
