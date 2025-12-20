@@ -1,4 +1,4 @@
-import { Flame, Heart, Bike } from 'lucide-react';
+import { Flame, Heart, Zap } from 'lucide-react';
 import churrasqueira from '@/assets/churrasqueira.jpg';
 
 export function About() {
@@ -27,7 +27,7 @@ export function About() {
                 <p className="text-sm font-medium">Com Amor</p>
               </div>
               <div className="text-center p-4 bg-card rounded-lg shadow-sm">
-                <Bike className="h-8 w-8 text-primary mx-auto mb-2" />
+                <Zap className="h-8 w-8 text-primary mx-auto mb-2" />
                 <p className="text-sm font-medium">Entrega Rápida</p>
               </div>
             </div>
