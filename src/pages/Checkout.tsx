@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Truck, Store } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Truck, Store, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCart } from '@/contexts/CartContext';
 import { useDeliveryFee } from '@/hooks/useProducts';
 import { useCreateOrder } from '@/hooks/useOrders';
@@ -28,8 +29,9 @@ export function CheckoutPage() {
   const [observations, setObservations] = useState('');
   const [pixCopied, setPixCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPixModal, setShowPixModal] = useState(false);
 
-  const PIX_KEY = "85999991111";
+  const PIX_KEY = "85981002335";
   const actualDeliveryFee = deliveryType === 'entrega' ? deliveryFee : 0;
   const total = subtotal + actualDeliveryFee;
 
@@ -90,8 +92,12 @@ export function CheckoutPage() {
         `Total: ${formatPrice(total)}`
       );
       
-      window.open(`https://wa.me/5585999991111?text=${whatsappMessage}`, '_blank');
-      navigate('/');
+      if (paymentMethod === 'pix') {
+        setShowPixModal(true);
+      } else {
+        window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
+        navigate('/');
+      }
     } catch (error) {
       toast.error('Erro ao criar pedido. Tente novamente.');
     } finally {
@@ -324,6 +330,44 @@ export function CheckoutPage() {
             </div>
           </div>
         </form>
+
+        <Dialog open={showPixModal} onOpenChange={setShowPixModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <Clock className="h-6 w-6 text-primary animate-pulse" />
+                Aguardando Pagamento
+              </DialogTitle>
+              <DialogDescription className="text-center pt-4">
+                <p className="text-base mb-4">
+                  Por favor, realize o pagamento via Pix e envie o comprovante pelo WhatsApp.
+                </p>
+                <div className="bg-muted p-4 rounded-lg mb-4">
+                  <p className="text-sm font-medium mb-2">Chave Pix (Telefone):</p>
+                  <code className="text-lg font-bold text-primary">{PIX_KEY}</code>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+            <Button 
+              onClick={() => {
+                const whatsappMessage = encodeURIComponent(
+                  `Olá! Acabei de fazer um pedido:\n\n` +
+                  `Nome: ${customerName}\n` +
+                  `Telefone: ${customerPhone}\n` +
+                  `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
+                  `Pagamento: Pix\n\n` +
+                  `Total: ${formatPrice(total)}`
+                );
+                window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
+                setShowPixModal(false);
+                navigate('/');
+              }}
+              className="w-full gradient-primary"
+            >
+              OK
+            </Button>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
