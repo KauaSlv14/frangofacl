@@ -1,6 +1,6 @@
 import { Phone, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import churrasqueira from '@/assets/churrasqueira.jpg';
+import heroBanner from '@/assets/hero-banner.jpg';
 
 export function Hero() {
   const scrollToMenu = () => {
@@ -14,7 +14,7 @@ export function Hero() {
     >
       <div 
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${churrasqueira})` }}
+        style={{ backgroundImage: `url(${heroBanner})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
       </div>
@@ -58,11 +58,11 @@ export function Hero() {
             <span>Fortaleza, CE</span>
           </div>
           <a 
-            href="tel:8598100235"
+            href="tel:8593249-0764"
             className="flex items-center gap-2 hover:text-secondary transition-colors"
           >
             <Phone className="h-5 w-5 text-secondary" />
-            <span>(85) 98100-2335</span>
+            <span>(85) 93249-0764</span>
           </a>
         </div>
       </div>
