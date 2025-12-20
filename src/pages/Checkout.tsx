@@ -30,6 +30,7 @@ export function CheckoutPage() {
   const [pixCopied, setPixCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPixModal, setShowPixModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const PIX_KEY = "85981002335";
   const actualDeliveryFee = deliveryType === 'entrega' ? deliveryFee : 0;
@@ -94,9 +95,7 @@ export function CheckoutPage() {
       if (paymentMethod === 'pix') {
         setShowPixModal(true);
       } else {
-        clearCart();
-        window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
-        navigate('/');
+        setShowConfirmModal(true);
       }
     } catch (error) {
       toast.error('Erro ao criar pedido. Tente novamente.');
@@ -361,6 +360,41 @@ export function CheckoutPage() {
                 clearCart();
                 window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
                 setShowPixModal(false);
+                navigate('/');
+              }}
+              className="w-full gradient-primary"
+            >
+              OK
+            </Button>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-center gap-2 text-xl">
+                <Check className="h-6 w-6 text-green-500" />
+                Pedido Confirmado!
+              </DialogTitle>
+              <DialogDescription className="text-center pt-4">
+                <p className="text-base mb-4">
+                  Seu pedido foi realizado com sucesso. Aguarde, entraremos em contato em breve!
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+            <Button 
+              onClick={() => {
+                const whatsappMessage = encodeURIComponent(
+                  `Olá! Acabei de fazer um pedido:\n\n` +
+                  `Nome: ${customerName}\n` +
+                  `Telefone: ${customerPhone}\n` +
+                  `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
+                  `Pagamento: Na entrega\n\n` +
+                  `Total: ${formatPrice(total)}`
+                );
+                clearCart();
+                window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
+                setShowConfirmModal(false);
                 navigate('/');
               }}
               className="w-full gradient-primary"
