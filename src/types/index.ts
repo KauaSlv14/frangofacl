@@ -61,3 +61,13 @@ export interface OrderItem {
 export interface OrderWithItems extends Order {
   items: OrderItem[];
 }
+
+export interface AdminRequest {
+  id: string;
+  user_id: string;
+  email: string;
+  full_name: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+  updated_at: string;
+}
