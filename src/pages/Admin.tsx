@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, RefreshCw, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,12 @@ export function AdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [loading, user, navigate]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -56,7 +62,6 @@ export function AdminPage() {
   }
 
   if (!user) {
-    navigate('/auth');
     return null;
   }
 
