@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Search, Filter } from 'lucide-react';
+import { LogOut, RefreshCw, Search, Filter, Users, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
+import { useAdminRequests, useApproveAdminRequest, useRejectAdminRequest } from '@/hooks/useAdminRequests';
 import { OrderStatus, OrderWithItems } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -42,6 +44,9 @@ export function AdminPage() {
   const navigate = useNavigate();
   const { user, isAdmin, signOut, loading } = useAuth();
   const { data: orders, isLoading, refetch } = useOrders();
+  const { data: adminRequests } = useAdminRequests();
+  const approveRequest = useApproveAdminRequest();
+  const rejectRequest = useRejectAdminRequest();
   const updateStatus = useUpdateOrderStatus();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -109,6 +114,24 @@ export function AdminPage() {
     }
   };
 
+  const handleApproveRequest = async (requestId: string, userId: string) => {
+    try {
+      await approveRequest.mutateAsync({ requestId, userId });
+      toast.success('Solicitação aprovada! O usuário agora é administrador.');
+    } catch {
+      toast.error('Erro ao aprovar solicitação');
+    }
+  };
+
+  const handleRejectRequest = async (requestId: string) => {
+    try {
+      await rejectRequest.mutateAsync(requestId);
+      toast.success('Solicitação rejeitada.');
+    } catch {
+      toast.error('Erro ao rejeitar solicitação');
+    }
+  };
+
   const formatPrice = (price: number) => {
     return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
@@ -154,102 +177,176 @@ export function AdminPage() {
       </header>
 
       <main className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nome, telefone ou número..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full md:w-48">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Filtrar status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Tabs defaultValue="orders" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="orders">Pedidos</TabsTrigger>
+            <TabsTrigger value="admin-requests" className="relative">
+              <Users className="h-4 w-4 mr-2" />
+              Solicitações
+              {adminRequests && adminRequests.length > 0 && (
+                <Badge className="ml-2 bg-red-500 text-white text-xs px-1.5 py-0.5">
+                  {adminRequests.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="grid gap-4 md:grid-cols-4 mb-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Pedidos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{orders?.length || 0}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Novos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-blue-500">
-                {orders?.filter(o => o.status === 'novo').length || 0}
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Em Preparo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-yellow-500">
-                {orders?.filter(o => o.status === 'em_preparo').length || 0}
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Entregues Hoje
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-green-500">
-                {orders?.filter(o => 
-                  o.status === 'entregue' && 
-                  new Date(o.created_at).toDateString() === new Date().toDateString()
-                ).length || 0}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+          <TabsContent value="orders">
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar por nome, telefone ou número..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-48">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filtrar status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        {isLoading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Carregando pedidos...</p>
-          </div>
-        ) : filteredOrders?.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhum pedido encontrado</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredOrders?.map((order) => (
-              <OrderCard 
-                key={order.id} 
-                order={order}
-                onStatusChange={handleStatusChange}
-                formatPrice={formatPrice}
-              />
-            ))}
-          </div>
-        )}
+            <div className="grid gap-4 md:grid-cols-4 mb-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    Total Pedidos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold">{orders?.length || 0}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    Novos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-blue-500">
+                    {orders?.filter(o => o.status === 'novo').length || 0}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    Em Preparo
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-yellow-500">
+                    {orders?.filter(o => o.status === 'em_preparo').length || 0}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    Entregues Hoje
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-green-500">
+                    {orders?.filter(o => 
+                      o.status === 'entregue' && 
+                      new Date(o.created_at).toDateString() === new Date().toDateString()
+                    ).length || 0}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {isLoading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Carregando pedidos...</p>
+              </div>
+            ) : filteredOrders?.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Nenhum pedido encontrado</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredOrders?.map((order) => (
+                  <OrderCard 
+                    key={order.id} 
+                    order={order}
+                    onStatusChange={handleStatusChange}
+                    formatPrice={formatPrice}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="admin-requests">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Solicitações de Acesso Admin
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {!adminRequests || adminRequests.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">
+                    Nenhuma solicitação pendente
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {adminRequests.map((request) => (
+                      <div
+                        key={request.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div>
+                          <p className="font-medium">{request.full_name || 'Sem nome'}</p>
+                          <p className="text-sm text-muted-foreground">{request.email}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Solicitado em {format(new Date(request.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                            onClick={() => handleApproveRequest(request.id, request.user_id)}
+                            disabled={approveRequest.isPending}
+                          >
+                            <Check className="h-4 w-4 mr-1" />
+                            Aprovar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleRejectRequest(request.id)}
+                            disabled={rejectRequest.isPending}
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Rejeitar
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

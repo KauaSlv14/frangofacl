@@ -7,12 +7,15 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCreateAdminRequest, useMyAdminRequest } from '@/hooks/useAdminRequests';
 import { toast } from 'sonner';
 import logo from '@/assets/logo-frango-facil.png';
 
 export function AuthPage() {
   const navigate = useNavigate();
   const { signIn, signUp, user, isAdmin } = useAuth();
+  const createAdminRequest = useCreateAdminRequest();
+  const { data: myRequest } = useMyAdminRequest(user?.id);
   const [isLoading, setIsLoading] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState('');
@@ -66,12 +69,79 @@ export function AuthPage() {
       } else {
         toast.error(error.message);
       }
-    } else {
-      toast.success('Conta criada com sucesso! Você já pode fazer login.');
+      setIsLoading(false);
+      return;
     }
 
+    // After successful signup, create an admin request
+    toast.success('Conta criada! Sua solicitação de acesso foi enviada para aprovação.');
+    
     setIsLoading(false);
   };
+
+  // Show pending status for logged-in users waiting for approval
+  if (user && !isAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/')}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar ao site
+          </Button>
+
+          <Card className="shadow-xl">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <img src={logo} alt="Frango Fácil" className="h-16 w-auto" />
+              </div>
+              <CardTitle className="font-display text-2xl text-primary">
+                Aguardando Aprovação
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              {myRequest?.status === 'pending' ? (
+                <p className="text-muted-foreground">
+                  Sua solicitação de acesso administrativo está pendente. 
+                  Um administrador irá revisar em breve.
+                </p>
+              ) : myRequest?.status === 'rejected' ? (
+                <p className="text-destructive">
+                  Sua solicitação foi rejeitada. Entre em contato com um administrador.
+                </p>
+              ) : (
+                <>
+                  <p className="text-muted-foreground">
+                    Você ainda não solicitou acesso administrativo.
+                  </p>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await createAdminRequest.mutateAsync({
+                          userId: user.id,
+                          email: user.email || '',
+                          fullName: user.user_metadata?.full_name || ''
+                        });
+                        toast.success('Solicitação enviada com sucesso!');
+                      } catch {
+                        toast.error('Erro ao enviar solicitação');
+                      }
+                    }}
+                    disabled={createAdminRequest.isPending}
+                  >
+                    Solicitar Acesso Admin
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
@@ -209,7 +279,7 @@ export function AuthPage() {
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center">
-                    Após cadastrar, peça a um administrador para liberar seu acesso.
+                    Após cadastrar, sua solicitação será enviada para aprovação de um administrador.
                   </p>
                 </form>
               </TabsContent>

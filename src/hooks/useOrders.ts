@@ -60,6 +60,7 @@ interface CreateOrderParams {
   subtotal: number;
   deliveryFee: number;
   total: number;
+  userId: string;
 }
 
 export function useCreateOrder() {
@@ -83,7 +84,8 @@ export function useCreateOrder() {
           subtotal: params.subtotal,
           delivery_fee: params.deliveryFee,
           total: params.total,
-          status: 'novo'
+          status: 'novo',
+          user_id: params.userId
         });
 
       if (orderError) throw orderError;

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Truck, Store, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft, Copy, Check, Truck, Store, Clock, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDeliveryFee } from '@/hooks/useProducts';
 import { useCreateOrder } from '@/hooks/useOrders';
 import { DeliveryType, PaymentMethod } from '@/types';
@@ -18,6 +19,7 @@ import { toast } from 'sonner';
 export function CheckoutPage() {
   const navigate = useNavigate();
   const { items, subtotal, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
   const { data: deliveryFee = 5 } = useDeliveryFee();
   const createOrder = useCreateOrder();
 
@@ -50,6 +52,12 @@ export function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user) {
+      toast.error('Por favor, faça login para continuar');
+      navigate('/auth');
+      return;
+    }
+
     if (!customerName.trim()) {
       toast.error('Por favor, informe seu nome');
       return;
@@ -78,7 +86,8 @@ export function CheckoutPage() {
         items,
         subtotal,
         deliveryFee: actualDeliveryFee,
-        total
+        total,
+        userId: user.id
       });
 
       toast.success('Pedido realizado com sucesso!');
@@ -104,12 +113,60 @@ export function CheckoutPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p>Carregando...</p>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Seu carrinho está vazio</h2>
           <Button onClick={() => navigate('/')}>Voltar ao cardápio</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background py-8">
+        <div className="container mx-auto px-4 max-w-lg">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/')}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar
+          </Button>
+
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="flex items-center justify-center gap-2">
+                <LogIn className="h-6 w-6" />
+                Login Necessário
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <p className="text-muted-foreground">
+                Para fazer um pedido, você precisa estar logado.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <Button asChild>
+                  <Link to="/auth">Fazer Login</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/auth">Criar Conta</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
