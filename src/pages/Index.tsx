@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { About } from '@/components/About';
@@ -13,6 +14,7 @@ import { CartDrawer } from '@/components/CartDrawer';
 const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
+  const { itemCount } = useCart();
 
   const handleCheckout = () => {
     setIsCartOpen(false);
@@ -20,7 +22,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background ${itemCount > 0 ? 'pb-24 md:pb-0' : ''}`}>
       <Header onCartClick={() => setIsCartOpen(true)} />
       <Hero />
       <About />

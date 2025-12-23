@@ -16,7 +16,7 @@ export function MobileBanner({ onCartClick }: MobileBannerProps) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-primary text-primary-foreground p-4 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-primary text-primary-foreground p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.15)]">
       <div className="flex items-center justify-between">
         <div>
           <p className="font-bold">{itemCount} {itemCount === 1 ? 'item' : 'itens'}</p>

@@ -54,7 +54,7 @@ export function CheckoutPage() {
 
     if (!user) {
       toast.error('Por favor, faça login para continuar');
-      navigate('/auth');
+      navigate('/login');
       return;
     }
 
@@ -159,10 +159,10 @@ export function CheckoutPage() {
               </p>
               <div className="flex gap-3 justify-center">
                 <Button asChild>
-                  <Link to="/auth">Fazer Login</Link>
+                  <Link to="/login">Fazer Login</Link>
                 </Button>
                 <Button variant="outline" asChild>
-                  <Link to="/auth">Criar Conta</Link>
+                  <Link to="/register">Criar Conta</Link>
                 </Button>
               </div>
             </CardContent>

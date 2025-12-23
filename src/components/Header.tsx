@@ -42,6 +42,15 @@ export function Header({ onCartClick }: HeaderProps) {
           </nav>
 
           <div className="flex items-center gap-2">
+            {!user && (
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  Entrar
+                </Button>
+              </Link>
+            )}
+            
             {user && isAdmin && (
               <Link to="/admin">
                 <Button variant="ghost" size="icon" className="text-foreground">
@@ -106,6 +115,15 @@ export function Header({ onCartClick }: HeaderProps) {
               >
                 Contato
               </a>
+              {!user && (
+                <Link 
+                  to="/login" 
+                  className="text-foreground hover:text-primary transition-colors font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Entrar
+                </Link>
+              )}
               {user && isAdmin && (
                 <Link 
                   to="/admin" 
