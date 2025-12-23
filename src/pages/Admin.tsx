@@ -54,7 +54,7 @@ export function AdminPage() {
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/auth');
+      navigate('/admin/login');
     }
   }, [loading, user, navigate]);
 

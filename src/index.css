@@ -127,4 +127,9 @@
   .gradient-secondary {
     background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--accent)) 100%);
   }
+
+  /* Mobile cart padding for page content */
+  .page-content-with-cart {
+    padding-bottom: calc(72px + 1.5rem);
+  }
 }
