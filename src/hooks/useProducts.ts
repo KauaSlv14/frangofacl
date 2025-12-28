@@ -11,9 +11,47 @@ export function useProducts() {
         .select('*')
         .eq('is_active', true)
         .order('name');
-      
+
       if (error) throw error;
-      return data as Product[];
+
+      // Adding additional menu items as requested
+      const additionalItems: Product[] = [
+        {
+          id: 'panelada-extra',
+          name: 'Panelada',
+          description: 'Deliciosa panelada tradicional',
+          price: 17,
+          category: 'Pratos',
+          is_active: true,
+          image_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 'feijoada-extra',
+          name: 'Feijoada',
+          description: 'Feijoada completa com pertences',
+          price: 17,
+          category: 'Pratos',
+          is_active: true,
+          image_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 'assado-panela-extra',
+          name: 'Assado de Panela',
+          description: 'Carne assada na panela com molho especial',
+          price: 17,
+          category: 'Pratos',
+          is_active: true,
+          image_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ];
+
+      return [...(data as Product[]), ...additionalItems];
     }
   });
 }
@@ -27,7 +65,7 @@ export function useAccompaniments() {
         .select('*')
         .eq('is_active', true)
         .order('name');
-      
+
       if (error) throw error;
       return data as Accompaniment[];
     }
@@ -43,7 +81,7 @@ export function useDeliveryFee() {
         .select('value')
         .eq('key', 'delivery_fee')
         .single();
-      
+
       if (error) throw error;
       return parseFloat(data.value);
     }

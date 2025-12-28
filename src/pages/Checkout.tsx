@@ -91,16 +91,25 @@ export function CheckoutPage() {
       });
 
       toast.success('Pedido realizado com sucesso!');
-      
+
+      const itemsList = items.map(item => {
+        const acc = item.accompaniments.length > 0 ? ` (+ ${item.accompaniments.join(', ')})` : '';
+        const obs = item.observations ? `\n   Obs: ${item.observations}` : '';
+        return `${item.quantity}x ${item.product.name}${acc}${obs}`;
+      }).join('\n');
+
       const whatsappMessage = encodeURIComponent(
         `Olá! Acabei de fazer um pedido:\n\n` +
+        `*Itens:*\n${itemsList}\n\n` +
+        `*Dados do Cliente:*\n` +
         `Nome: ${customerName}\n` +
         `Telefone: ${customerPhone}\n` +
         `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
-        `Pagamento: ${paymentMethod === 'pix' ? 'Pix' : 'Na entrega'}\n\n` +
-        `Total: ${formatPrice(total)}`
+        `Pagamento: ${paymentMethod === 'pix' ? 'Pix' : 'Na entrega'}\n` +
+        `Observações: ${observations || 'Nenhuma'}\n\n` +
+        `*Total: ${formatPrice(total)}*`
       );
-      
+
       if (paymentMethod === 'pix') {
         setShowPixModal(true);
       } else {
@@ -404,15 +413,24 @@ export function CheckoutPage() {
                 </div>
               </DialogDescription>
             </DialogHeader>
-            <Button 
+            <Button
               onClick={() => {
+                const itemsList = items.map(item => {
+                  const acc = item.accompaniments.length > 0 ? ` (+ ${item.accompaniments.join(', ')})` : '';
+                  const obs = item.observations ? `\n   Obs: ${item.observations}` : '';
+                  return `${item.quantity}x ${item.product.name}${acc}${obs}`;
+                }).join('\n');
+
                 const whatsappMessage = encodeURIComponent(
                   `Olá! Acabei de fazer um pedido:\n\n` +
+                  `*Itens:*\n${itemsList}\n\n` +
+                  `*Dados do Cliente:*\n` +
                   `Nome: ${customerName}\n` +
                   `Telefone: ${customerPhone}\n` +
                   `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
-                  `Pagamento: Pix\n\n` +
-                  `Total: ${formatPrice(total)}`
+                  `Pagamento: Pix\n` +
+                  `Observações: ${observations || 'Nenhuma'}\n\n` +
+                  `*Total: ${formatPrice(total)}*`
                 );
                 clearCart();
                 window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');
@@ -439,15 +457,24 @@ export function CheckoutPage() {
                 </p>
               </DialogDescription>
             </DialogHeader>
-            <Button 
+            <Button
               onClick={() => {
+                const itemsList = items.map(item => {
+                  const acc = item.accompaniments.length > 0 ? ` (+ ${item.accompaniments.join(', ')})` : '';
+                  const obs = item.observations ? `\n   Obs: ${item.observations}` : '';
+                  return `${item.quantity}x ${item.product.name}${acc}${obs}`;
+                }).join('\n');
+
                 const whatsappMessage = encodeURIComponent(
                   `Olá! Acabei de fazer um pedido:\n\n` +
+                  `*Itens:*\n${itemsList}\n\n` +
+                  `*Dados do Cliente:*\n` +
                   `Nome: ${customerName}\n` +
                   `Telefone: ${customerPhone}\n` +
                   `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
-                  `Pagamento: Na entrega\n\n` +
-                  `Total: ${formatPrice(total)}`
+                  `Pagamento: Na entrega\n` +
+                  `Observações: ${observations || 'Nenhuma'}\n\n` +
+                  `*Total: ${formatPrice(total)}*`
                 );
                 clearCart();
                 window.open(`https://wa.me/5585981002335?text=${whatsappMessage}`, '_blank');

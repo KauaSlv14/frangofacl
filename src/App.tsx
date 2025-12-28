@@ -13,6 +13,7 @@ import { ForgotPasswordPage } from "./pages/ForgotPassword";
 import { ResetPasswordPage } from "./pages/ResetPassword";
 import { AdminLoginPage } from "./pages/AdminLogin";
 import { AdminPage } from "./pages/Admin";
+import { MyOrdersPage } from "./pages/MyOrders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -110,6 +111,16 @@ const AppRoutes = () => {
 
       {/* Password reset - accessible with token */}
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+      {/* User routes */}
+      <Route
+        path="/meus-pedidos"
+        element={
+          <ProtectedRoute>
+            <MyOrdersPage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Admin routes */}
       <Route

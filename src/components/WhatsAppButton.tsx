@@ -3,7 +3,7 @@ import { useCart } from '@/contexts/CartContext';
 
 export function WhatsAppButton() {
   const { itemCount } = useCart();
-  const whatsappLink = "https://wa.me/5585999991111?text=Olá! Gostaria de fazer um pedido.";
+  const whatsappLink = "https://wa.me/558581002335?text=Olá! Gostaria de fazer um pedido.";
 
   // Calculate bottom position based on cart visibility
   // Mobile banner height is approximately 72px (p-4 + content)

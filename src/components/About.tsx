@@ -14,7 +14,7 @@ export function About() {
               O Frango Fácil é uma galeteria/marmitaria com forte presença local na Cidade 2000, Fortaleza. Nossa especialidade é frango assado e pratos executivos para o almoço, preparados diariamente com temperos caseiros e porções generosas. Há anos, servimos os melhores frangos assados na brasa, com aquele sabor inconfundível que só a churrasqueira tradicional pode oferecer.
             </p>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              A unidade fica na Av. Central, 333 (Quadra 33) e funciona de terça a domingo no horário de almoço. Oferecemos retirada no local e entrega rápida para sua comodidade.
+              A unidade fica na Av. Central, 333 (Quadra 33) e funciona todos os dias no horário de almoço. Oferecemos retirada no local e entrega rápida para sua comodidade.
             </p>
 
             <div className="grid grid-cols-3 gap-4">
@@ -35,9 +35,9 @@ export function About() {
 
           <div className="order-1 md:order-2">
             <div className="relative">
-              <img 
-                src={churrasqueira} 
-                alt="Frango na churrasqueira" 
+              <img
+                src={churrasqueira}
+                alt="Frango na churrasqueira"
                 className="rounded-2xl shadow-2xl w-full h-[300px] md:h-[400px] object-cover"
               />
               <div className="absolute -bottom-4 -left-4 bg-primary text-primary-foreground p-4 rounded-xl shadow-lg">

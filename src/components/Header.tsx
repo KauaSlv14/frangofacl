@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, LogOut, ChevronDown, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -98,6 +98,12 @@ export function Header({ onCartClick }: HeaderProps) {
                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/meus-pedidos" className="cursor-pointer">
+                      <Package className="h-4 w-4 mr-2" />
+                      Meus Pedidos
+                    </Link>
+                  </DropdownMenuItem>
                   {isAdmin && (
                     <>
                       <DropdownMenuItem asChild>
