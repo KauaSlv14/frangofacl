@@ -105,7 +105,7 @@ export function CheckoutPage() {
         `Nome: ${customerName}\n` +
         `Telefone: ${customerPhone}\n` +
         `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
-        `Pagamento: ${paymentMethod === 'pix' ? 'Pix' : 'Na entrega'}\n` +
+        `Pagamento: ${paymentMethod === 'pix' ? 'Pix' : (deliveryType === 'retirada' ? 'No Local' : 'Na entrega')}\n` +
         `Observações: ${observations || 'Nenhuma'}\n\n` +
         `*Total: ${formatPrice(total)}*`
       );
@@ -301,7 +301,9 @@ export function CheckoutPage() {
                     <div className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted cursor-pointer">
                       <RadioGroupItem value="entrega" id="na-entrega" />
                       <Label htmlFor="na-entrega" className="flex-1 cursor-pointer">
-                        <span className="font-medium">Pagar na Entrega</span>
+                        <span className="font-medium">
+                          {deliveryType === 'retirada' ? 'Pagar no Local' : 'Pagar na Entrega'}
+                        </span>
                         <p className="text-sm text-muted-foreground">Dinheiro ou cartão</p>
                       </Label>
                     </div>
@@ -472,7 +474,7 @@ export function CheckoutPage() {
                   `Nome: ${customerName}\n` +
                   `Telefone: ${customerPhone}\n` +
                   `${deliveryType === 'entrega' ? `Endereço: ${customerAddress}\n` : 'Retirada no local\n'}` +
-                  `Pagamento: Na entrega\n` +
+                  `Pagamento: ${deliveryType === 'retirada' ? 'No Local' : 'Na entrega'}\n` +
                   `Observações: ${observations || 'Nenhuma'}\n\n` +
                   `*Total: ${formatPrice(total)}*`
                 );
