@@ -35,6 +35,7 @@ interface OrdersTableProps {
 }
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
+    novo: 'Pendente',
     pendente: 'Pendente',
     pago: 'Pago',
     em_preparacao: 'Em Preparo',
@@ -45,6 +46,7 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
+    novo: 'bg-yellow-500',
     pendente: 'bg-yellow-500',
     pago: 'bg-blue-500',
     em_preparacao: 'bg-orange-500',

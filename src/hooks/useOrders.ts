@@ -68,8 +68,16 @@ export function useCreateOrder() {
 
     return useMutation({
         mutationFn: async (params: CreateOrderParams) => {
-            // Geramos o ID no cliente para não precisar de RETURNING/SELECT (que é bloqueado por RLS para usuários públicos)
-            const orderId = crypto.randomUUID();
+            // Helper simples para gerar UUID v4 compatível (já que crypto.randomUUID pode falhar em http)
+            const generateUUID = () => {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            };
+
+            const orderId = generateUUID();
 
             // Separate real DB items from mock/extra items
             // Mock items have IDs like 'panelada-extra' which cause FK errors in order_items
@@ -82,7 +90,8 @@ export function useCreateOrder() {
             if (mockItems.length > 0) {
                 const mockNotes = mockItems.map(item => {
                     const acc = item.accompaniments.length > 0 ? ` (+ ${item.accompaniments.join(', ')})` : '';
-                    return `${item.quantity}x ${item.product.name}${acc}`;
+                    const obs = item.observations ? `Obs: ${item.observations}` : '';
+                    return `${item.quantity}x ${item.product.name}${acc} ${obs}`;
                 }).join('; ');
 
                 finalObservations = finalObservations
@@ -103,7 +112,7 @@ export function useCreateOrder() {
                     subtotal: params.subtotal,
                     delivery_fee: params.deliveryFee,
                     total: params.total,
-                    status: 'novo',
+                    status: 'novo' as any, // Initial status (was 'novo')
                     user_id: params.userId
                 });
 
@@ -142,7 +151,7 @@ export function useUpdateOrderStatus() {
         mutationFn: async ({ orderId, status }: { orderId: string; status: OrderStatus }) => {
             const { error } = await supabase
                 .from('orders')
-                .update({ status, updated_at: new Date().toISOString() })
+                .update({ status: status as any, updated_at: new Date().toISOString() })
                 .eq('id', orderId);
 
             if (error) throw error;

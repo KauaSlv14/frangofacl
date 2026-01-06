@@ -115,8 +115,9 @@ export function CheckoutPage() {
       } else {
         setShowConfirmModal(true);
       }
-    } catch (error) {
-      toast.error('Erro ao criar pedido. Tente novamente.');
+    } catch (error: any) {
+      console.error('Erro ao criar pedido:', error);
+      toast.error(`Erro ao criar pedido: ${error.message || 'Erro deconhecido'}`);
     } finally {
       setIsSubmitting(false);
     }

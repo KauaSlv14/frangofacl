@@ -24,7 +24,7 @@ export interface CartItem {
     observations: string;
 }
 
-export type OrderStatus = 'pendente' | 'pago' | 'em_preparacao' | 'pronto_para_entrega' | 'em_entrega' | 'entregue' | 'cancelado';
+export type OrderStatus = 'novo' | 'pendente' | 'pago' | 'em_preparacao' | 'pronto_para_entrega' | 'em_entrega' | 'entregue' | 'cancelado';
 export type PaymentMethod = 'pix' | 'entrega';
 export type DeliveryType = 'entrega' | 'retirada';
 
