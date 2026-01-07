@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Truck, Store, Clock, LogIn } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Bike, Store, Clock, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -247,7 +247,7 @@ export function CheckoutPage() {
                         htmlFor="entrega"
                         className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                       >
-                        <Truck className="mb-2 h-6 w-6" />
+                        <Bike className="mb-2 h-6 w-6" />
                         Entrega
                       </Label>
                     </div>
