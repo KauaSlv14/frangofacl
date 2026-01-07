@@ -209,6 +209,15 @@ export function Header({ onCartClick }: HeaderProps) {
                       </div>
                     </div>
 
+                    <Link
+                      to="/meus-pedidos"
+                      className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium mb-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Package className="h-4 w-4" />
+                      Meus Pedidos
+                    </Link>
+
                     {isAdmin && (
                       <Link
                         to="/admin"
